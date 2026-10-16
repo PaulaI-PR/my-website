@@ -22,6 +22,14 @@ export type ContentKey =
   | "label.Navi_2"
   | "label.Navi_3"
   | "label.Navi_Login"
+  // About page.
+  | "label.About_Title"
+  | "label.About_Quote"
+  | "label.About_Lead"
+  | "label.About_Body_1"
+  | "label.About_Body_2"
+  | "label.About_PortraitPlaceholder"
+  | "label.About_DownloadCv"
   // Login page, step 1: pick a channel and give the destination for the code.
   | "label.Login_Title"
   | "label.Login_Intro"
@@ -96,12 +104,12 @@ export function useContent(): Content | null {
 
 // Labels come from the content file; hrefs are routing, so they stay in code.
 // Nav wants { label, href }, so the key is resolved to its copy at render time.
-// The first three are still the placeholder "#" they have always been; the
-// login link is the one real destination, and it is what the hash router in
+// Work and Contact are still the placeholder "#" they have always been; About
+// and login are the real destinations, and they are what the hash router in
 // index.tsx matches on.
 export const MENU: { key: ContentKey; href: string }[] = [
   { key: "label.Navi_1", href: "#" },
-  { key: "label.Navi_2", href: "#" },
+  { key: "label.Navi_2", href: "#/about" },
   { key: "label.Navi_3", href: "#" },
   { key: "label.Navi_Login", href: "#/login" },
 ];
