@@ -1,6 +1,7 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { AboutPage } from "./AboutPage";
+import { ContactPage } from "./ContactPage";
 import { LandingPage } from "./LandingPage";
 import { LoginPage } from "./LoginPage";
 import "./styles.css";
@@ -16,6 +17,7 @@ import "./styles.css";
 
 const LOGIN_ROUTE = "#/login";
 const ABOUT_ROUTE = "#/about";
+const CONTACT_ROUTE = "#/contact";
 
 function useHashRoute(): string {
   // Read straight from location on first render so a deep link lands on the
@@ -44,6 +46,7 @@ function App() {
   // including the bare "#" the placeholder nav links set.
   if (hash === LOGIN_ROUTE) return <LoginPage />;
   if (hash === ABOUT_ROUTE) return <AboutPage />;
+  if (hash === CONTACT_ROUTE) return <ContactPage />;
   return <LandingPage />;
 }
 
