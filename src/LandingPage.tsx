@@ -1,4 +1,4 @@
-import { Button, Footer, ImageCard, Nav } from "pinx-ui";
+import { Footer, ImageCard, Nav } from "pinx-ui";
 import { MENU, useContent } from "./content";
 
 // Figma: my-website › Landing page (node 13:21) and mobile-landing-page (22:136).
@@ -85,16 +85,6 @@ export function LandingPage() {
       />
 
       <div className="mx-auto flex max-w-5xl flex-col gap-l px-l py-xl md:gap-2xs md:px-xl md:py-l">
-        {/* Primary button at the top of the page. Button takes no className, so
-            the wrapper is what keeps it at its intrinsic width — the flex column
-            would otherwise stretch it edge to edge. Its fill is color/primary/500,
-            resolved here from the core design system's token values — a brand
-            variant (see my-website-clone) can re-point this same token to a
-            different colour without touching this file at all. */}
-        <div className="w-fit">
-          <Button label="Test me" onClick={() => {}} />
-        </div>
-
         {/* Mobile: one full-width tile per row, each at the Image Card's own
             540/418 ratio — which is exactly what the mobile frame draws.
             Desktop: the 4 × 4 mosaic. Tiles span two rows or two columns, so the
