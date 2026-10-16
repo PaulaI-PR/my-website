@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Button, Input, Label, Nav, Radio } from "pinx-ui";
+import { Button, Input, Navigation, RadioButton } from "@pikonen/second-design-system";
 import { MENU, useContent } from "./content";
 import { requestCode, verifyCode, type Channel } from "./otp";
 
@@ -9,13 +9,14 @@ import { requestCode, verifyCode, type Channel } from "./otp";
 //
 // There is no Figma frame for this page — it is built from the design system's
 // own components and tokens rather than from a design, so the layout is plain:
-// one narrow column, everything stacked. It uses the same Nav as the landing
-// page so it reads as the same site. Spacing, type and colour are all pinx-ui
-// 0.5.0 tokens (spacing 2xs 8 · xs 12 · s 16 · m 24 · l 32 · xl 48).
+// one narrow column, everything stacked, under the same Navigation as every
+// other page. Colours and spacing are the package's tokens; type is the Figma
+// text styles in styles.css.
 //
-// Three things the design system does not cover, worked around rather than
-// invented over — see the notes at each site: Input has no `type`, Button has no
-// `type`, and there is no fieldset/legend component for a radio group.
+// Two things the design system does not cover, worked around rather than
+// invented over: Input has no error state (see `field-error` in styles.css),
+// and there is no Label, so the radio group's legend is styled to match
+// Input's own label (Inter Medium 14 / 20, slate-900).
 
 // Deliberately loose. The only thing a client can usefully check is that the
 // value has the shape of an address at all; whether it exists, and whether it
@@ -150,31 +151,34 @@ export function LoginPage() {
     setCooldown(0);
   }
 
-  // Button renders a <button> with no type attribute, so inside a form every
-  // one of them is a submit button. That is what makes Enter-in-a-field work:
-  // the browser clicks the default submit button, its onClick runs the step, and
-  // the submit event that follows is stopped here. onSubmit must therefore do
-  // nothing but preventDefault — putting the step handler here as well would
-  // run it twice.
-  function swallowSubmit(event: FormEvent) {
-    event.preventDefault();
+  // Each step is a real form with a real submit button, so Enter in a field
+  // submits it. preventDefault keeps the page from reloading.
+  function onSubmit(action: () => void) {
+    return (event: FormEvent) => {
+      event.preventDefault();
+      action();
+    };
   }
 
   return (
-    <div className="min-h-screen bg-white font-body text-body">
-      <Nav
+    <div className="flex min-h-screen flex-col bg-white font-sans">
+      <Navigation
         siteName={content["label.SiteName"]}
-        links={MENU.map((item) => ({ label: content[item.key], href: item.href }))}
+        links={MENU.map((item) => ({
+          label: content[item.key],
+          href: item.href,
+          active: item.href === "#/login",
+        }))}
       />
 
-      <main className="mx-auto flex w-full max-w-sm flex-col gap-l px-s py-xl md:px-0">
-        <header className="flex flex-col gap-2xs">
-          <h1 className="font-display text-display-md text-body">
+      <main className="mx-auto flex w-full max-w-sm flex-col gap-32 px-16 py-48 md:px-0">
+        <header className="flex flex-col gap-8">
+          <h1 className="text-h1 text-slate-900">
             {step === "done"
               ? content["label.Login_DoneTitle"]
               : content["label.Login_Title"]}
           </h1>
-          <p className="text-body-md text-body-disabled">
+          <p className="text-p text-slate-500">
             {step === "done"
               ? content["label.Login_DoneBody"]
               : content["label.Login_Intro"]}
@@ -182,19 +186,16 @@ export function LoginPage() {
         </header>
 
         {step === "request" && (
-          <form className="flex flex-col gap-m" onSubmit={swallowSubmit}>
-            {/* The design system has no grouped-control component, so the
-                grouping is native: a fieldset for the group and a legend for its
-                name, which is what makes a screen reader announce "How should we
-                send your code?" before each option. Label supplies the type
-                styling inside the legend rather than the legend being styled by
-                hand. Radio itself carries its own <label>, so each option needs
-                no wrapper. */}
-            <fieldset className="flex flex-col gap-xs">
-              <legend className="mb-xs">
-                <Label label={content["label.Login_ChannelLegend"]} />
+          <form className="flex flex-col gap-24" onSubmit={onSubmit(() => void send())}>
+            {/* A fieldset for the group and a legend for its name, which is
+                what makes a screen reader announce "How should we send your
+                code?" before each option. RadioButton carries its own <label>,
+                so each option needs no wrapper. */}
+            <fieldset className="flex flex-col gap-12">
+              <legend className="mb-12 text-small leading-[20px] text-slate-900">
+                {content["label.Login_ChannelLegend"]}
               </legend>
-              <Radio
+              <RadioButton
                 name="otp-channel"
                 value="email"
                 checked={isEmail}
@@ -205,7 +206,7 @@ export function LoginPage() {
                 label={content["label.Login_ChannelEmail"]}
                 disabled={pending}
               />
-              <Radio
+              <RadioButton
                 name="otp-channel"
                 value="sms"
                 checked={!isEmail}
@@ -220,28 +221,21 @@ export function LoginPage() {
 
             {/* One field, re-labelled by channel, rather than two that swap —
                 the value behind it swaps, but the control does not, so focus and
-                the field's position on the page stay put.
-
-                Input has no `type` prop, so this is a text input whichever
-                channel is chosen: no email or tel keyboard on mobile, and no
-                browser autofill for either. Both are design-system gaps rather
-                than something to route around locally — Input would need `type`
-                (and, for the code field, `inputMode` and `autoComplete`) for
-                this page to do better. Worth raising against the contract.
-
-                Input's own <label> is a bare <label> with no htmlFor, so it is
-                not programmatically tied to its input either. Same story: a fix
-                belongs in the component. */}
+                the field's position on the page stay put. Its type follows the
+                channel, so mobile shows the matching keyboard and the browser
+                offers the matching autofill. */}
             <Input
+              type={isEmail ? "email" : "tel"}
+              autoComplete={isEmail ? "email" : "tel"}
               label={
                 isEmail
                   ? content["label.Login_EmailLabel"]
                   : content["label.Login_PhoneLabel"]
               }
               value={isEmail ? email : phone}
-              onChange={(value) => {
-                if (isEmail) setEmail(value);
-                else setPhone(value);
+              onChange={(event) => {
+                if (isEmail) setEmail(event.target.value);
+                else setPhone(event.target.value);
                 setDestinationError(null);
               }}
               placeholder={
@@ -249,86 +243,73 @@ export function LoginPage() {
                   ? content["label.Login_EmailPlaceholder"]
                   : content["label.Login_PhonePlaceholder"]
               }
-              error={destinationError ?? undefined}
+              helperText={destinationError ?? undefined}
+              aria-invalid={destinationError ? true : undefined}
+              className={destinationError ? "field-error" : undefined}
               disabled={pending}
             />
 
-            {/* Button takes no className, so the wrapper is what keeps it at its
-                intrinsic width — the flex column would otherwise stretch it. */}
-            <div className="w-fit">
-              <Button
-                label={content["label.Login_Send"]}
-                onClick={() => void send()}
-                disabled={pending}
-              />
-            </div>
+            <Button type="submit" className="w-fit" loading={pending}>
+              {content["label.Login_Send"]}
+            </Button>
           </form>
         )}
 
         {step === "verify" && (
-          <form className="flex flex-col gap-m" onSubmit={swallowSubmit}>
-            <p className="text-body-md text-body">
+          <form className="flex flex-col gap-24" onSubmit={onSubmit(() => void verify())}>
+            <p className="text-p text-slate-800">
               {content["label.Login_CodeSent"].replace("{destination}", sentTo)}
             </p>
 
             <Input
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              maxLength={6}
               label={content["label.Login_CodeLabel"]}
               value={code}
-              onChange={(value) => {
-                setCode(value);
+              onChange={(event) => {
+                setCode(event.target.value);
                 setCodeError(null);
               }}
               placeholder={content["label.Login_CodePlaceholder"]}
-              error={codeError ?? undefined}
+              helperText={codeError ?? undefined}
+              aria-invalid={codeError ? true : undefined}
+              className={codeError ? "field-error" : undefined}
               disabled={pending}
             />
 
-            {/* All three actions of this step are one group, so they share one
-                wrapper, one gap token and one alignment, and all sit at the
-                default `large` size — the design shows no size hierarchy
-                between them, only the primary/secondary distinction. */}
-            <div className="flex flex-wrap items-center gap-s">
-              <Button
-                label={content["label.Login_Verify"]}
-                onClick={() => void verify()}
-                disabled={pending}
-              />
-              {/* Button takes a plain string, so the countdown cannot be its
-                  own node — the cooling-down state is a second copy string with
-                  a {seconds} placeholder rather than a number glued onto the
+            {/* All three actions of this step are one group: one wrapper, one
+                gap token, one alignment. Button has no size prop, so all three
+                are the same size by construction; only the variant marks the
+                primary action. */}
+            <div className="flex flex-wrap items-center gap-16">
+              <Button type="submit" loading={pending}>
+                {content["label.Login_Verify"]}
+              </Button>
+              {/* The cooling-down state is a second copy string with a
+                  {seconds} placeholder rather than a number glued onto the
                   first one, so a translator can put the count where their
                   language wants it. */}
               <Button
-                label={
-                  cooldown > 0
-                    ? content["label.Login_ResendWait"].replace(
-                        "{seconds}",
-                        String(cooldown),
-                      )
-                    : content["label.Login_Resend"]
-                }
-                variant="secondary"
+                variant="outline"
                 onClick={() => void resend()}
                 disabled={pending || cooldown > 0}
-              />
-              <Button
-                label={content["label.Login_Back"]}
-                variant="secondary"
-                onClick={restart}
-                disabled={pending}
-              />
+              >
+                {cooldown > 0
+                  ? content["label.Login_ResendWait"].replace("{seconds}", String(cooldown))
+                  : content["label.Login_Resend"]}
+              </Button>
+              <Button variant="outline" onClick={restart} disabled={pending}>
+                {content["label.Login_Back"]}
+              </Button>
             </div>
           </form>
         )}
 
         {step === "done" && (
-          <div className="w-fit">
-            <Button
-              label={content["label.Login_Restart"]}
-              variant="secondary"
-              onClick={restart}
-            />
-          </div>
+          <Button variant="outline" className="w-fit" onClick={restart}>
+            {content["label.Login_Restart"]}
+          </Button>
         )}
       </main>
     </div>

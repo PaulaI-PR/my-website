@@ -1,4 +1,4 @@
-import { Footer, ImageCard, Nav } from "pinx-ui";
+import { Footer, ImageCard, Navigation } from "@pikonen/second-design-system";
 import { MENU, useContent } from "./content";
 
 // Figma: my-website › Landing page (node 13:21) and mobile-landing-page (22:136).
@@ -6,39 +6,23 @@ import { MENU, useContent } from "./content";
 // md: as the seam — below md it follows the 390-wide mobile frame, at md and up
 // the 1280-wide desktop frame.
 //
-// Every type style, colour and radius here is a design system token. The design's
-// SPACING is not on the design system's scale, so each value is snapped to its
-// nearest step, ties rounding up. That is a deliberate trade: the rhythm is
-// tokenised, and drifts from Figma by up to 22px in places.
+// Spacing is the design system's tokens. The design's own values were never on
+// the old pinx-ui scale, so they were snapped to it; the move to
+// @pikonen/second-design-system keeps those snapped values exactly — every px
+// the page rendered before, it renders now:
 //
-//   design    token   px    used for
-//   8         2xs      8    footer bottom padding (exact)
-//   10        2xs      8    desktop section gaps
-//   16, 20    s       16    tile gaps (mobile 16 exact, desktop 20)
-//   24, 27    l       32    mobile gutters
-//   32        l       32    mobile section gaps (exact)
-//   40        xl      48    mobile page vertical padding
-//   70, 90    xl      48    desktop footer top padding, desktop gutters
+//   design    token   used for
+//   8         8       footer bottom padding (exact)
+//   10        8       desktop section gaps
+//   16, 20    16      tile gaps (mobile 16 exact, desktop 20)
+//   24, 27    32      mobile gutters
+//   32        32      mobile section gaps (exact)
+//   40        48      mobile page vertical padding
+//   70, 90    48      desktop footer top padding, desktop gutters
 //
-// Those token NAMES are pinx-ui 0.5.0's. That release retired the old
-// small/medium/large/extra-large set for Figma's own 4xs 2 · 3xs 4 · 2xs 8 ·
-// xs 12 · s 16 · m 24 · l 32 · xl 48, and until the rename below this page
-// rendered with no gaps or gutters at all — Tailwind emits nothing for a token
-// that does not exist. The rename went by VALUE, not by name, which is the
-// whole difficulty: the new xs is 12px, NOT the 8px the old `small` held (8px
-// is 2xs), so a name-for-name swap would have shifted every 8px inset up to 12.
-// Every px in the table above is what the page rendered under 0.4.3, unchanged.
-//
-// What is now POSSIBLE and is not done here: 0.5.0 added xs 12 and m 24, two
-// steps the old scale had no answer for, so three rows above could snap closer
-// than they do — 24/27 mobile gutters onto m (24) rather than l (32), 10 onto
-// xs (12) on a tie, 20 onto m (24) on a tie. That is a change to how the page
-// looks, not a repair of it, so it wants its own decision.
-//
-// The header is the design system's Nav, so its spacing is the component's own
-// and is not snapped here. The page column is max-w-5xl (1024px) against the
-// design's 1100px, which is the width Nav lays its own bar out to — the two line
-// up rather than the page inventing a width of its own.
+// What is now POSSIBLE and is not done here: the new scale has 10, 20, 24 and
+// 40 steps, so most rows above could match the design exactly. That changes how
+// the page looks rather than repairing it, so it wants its own decision.
 
 // Desktop mosaic placement, in the design's stacking order. Node ids are the
 // Image Card instances in Figma. The placement is md:-only: below md the frame
@@ -59,7 +43,8 @@ const TILES = [
 // Placeholder content: every Image Card instance in the design carries the
 // component's default photo, so all ten tiles are the same image and share one
 // alt string. Swap in a per-tile src/alt — and title/description, which surface
-// the card's hover caption — once there is real work to show.
+// the card's hover caption and until then show the component's own "Image
+// Title" defaults — once there is real work to show.
 const TILE_IMAGE = "/assets/portfolio-tile.jpg";
 const TILE_ALT = "A lioness resting on open gravel";
 
@@ -72,44 +57,39 @@ export function LandingPage() {
   if (!content) return null;
 
   return (
-    <div className="min-h-screen bg-white font-body text-body">
-      {/* Nav renders the whole header — site name and links — as one sticky,
-          full-bleed bar with its own bottom rule, so it sits outside the page
-          column and takes no className. What the design's own header had and
-          this does not: the display-type h1 (Nav sets the site name as a span at
-          text/body/md/em) and the mobile stack, since Nav is one row at every
-          width. */}
-      <Nav
+    <div className="min-h-screen bg-white font-sans">
+      <Navigation
         siteName={content["label.SiteName"]}
         links={MENU.map((item) => ({ label: content[item.key], href: item.href }))}
       />
 
-      <div className="mx-auto flex max-w-5xl flex-col gap-l px-l py-xl md:gap-2xs md:px-xl md:py-l">
-        {/* Mobile: one full-width tile per row, each at the Image Card's own
-            540/418 ratio — which is exactly what the mobile frame draws.
-            Desktop: the 4 × 4 mosaic. Tiles span two rows or two columns, so the
-            rows need a definite height to divide; the grid takes the design
-            grid's own proportion (1100 × 856) and min-h-0 stops it growing to
-            content instead (it is a flex item, so its min-height would otherwise
-            be auto). */}
-        <main className="flex flex-col gap-s md:grid md:aspect-[1100/856] md:min-h-0 md:grid-cols-4 md:grid-rows-4">
+      <div className="mx-auto flex max-w-5xl flex-col gap-32 px-32 py-48 md:gap-8 md:px-48 md:py-32">
+        {/* Mobile: one full-width tile per row, each at the 540/418 ratio the
+            mobile frame draws — ImageCard has no ratio of its own, so the tile
+            sets it. Desktop: the 4 × 4 mosaic. Tiles span two rows or two
+            columns, so the rows need a definite height to divide; the grid takes
+            the design grid's own proportion (1100 × 856) and min-h-0 stops it
+            growing to content instead (it is a flex item, so its min-height
+            would otherwise be auto). */}
+        <main className="flex flex-col gap-16 md:grid md:aspect-[1100/856] md:min-h-0 md:grid-cols-4 md:grid-rows-4">
           {TILES.map((tile) => (
-            // The wrapper carries the grid placement — ImageCard takes no
-            // className of its own — and size-full on the card makes both axes
-            // definite, which overrides its 540/418 ratio so it fills a cell of
-            // any shape. Height alone is not enough: the ratio would then derive
-            // the width from it and overflow the column. Mobile leaves the ratio
-            // be, since there the stack wants exactly 540/418.
-            <div key={tile.node} className={`${tile.place} md:[&>*]:size-full`}>
-              <ImageCard src={TILE_IMAGE} alt={TILE_ALT} />
-            </div>
+            // ImageCard takes className, so the grid placement goes straight on
+            // it. On desktop size-full makes both axes definite, which
+            // overrides the mobile ratio so the card fills a cell of any shape.
+            <ImageCard
+              key={tile.node}
+              src={TILE_IMAGE}
+              alt={TILE_ALT}
+              className={`aspect-[540/418] md:aspect-auto md:size-full ${tile.place}`}
+            />
           ))}
         </main>
 
-        {/* Was eight lines of inline <footer>; the responsive stack it carried
-            now lives in pinx-ui's Footer (>= 0.8.1), which owns no inline
-            padding so the container's px-l / md:px-xl still applies. */}
-        <Footer copyright="copyright 2026" tagline="UX · UI · Visual design · Copy" />
+        {/* This tagline is longer than the Footer's default, and Footer is one
+            row at every width, so on mobile the two halves would squeeze side
+            by side. flex-wrap lets the tagline drop under the copyright line
+            instead — the stack pinx-ui's Footer used to do itself. */}
+        <Footer right="UX · UI · Visual design · Copy" className="flex-wrap gap-x-16" />
       </div>
     </div>
   );

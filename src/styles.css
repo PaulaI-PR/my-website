@@ -1,12 +1,70 @@
 @import "tailwindcss";
 
-/* Design tokens, straight from the design system (pinx-ui >= 0.1.5): colours,
-   fonts, the type scale, spacing, radius and elevation. The type scale used to
-   be redeclared below this line — and its display/l (Light 40) disagreed with
-   the design system's (Bold 60 / -2%, the h1 the desktop design actually uses)
-   — so it now lives only upstream, in pinx-ui/theme.css. */
-@import "pinx-ui/theme.css";
+/* Design system: @pikonen/second-design-system. Fonts first (self-hosted via
+   Fontsource), then the token files, then the components' own stylesheet. */
+@import "@pikonen/second-design-system/tokens/fonts.css";
+@import "@pikonen/second-design-system/tokens/typography.css";
+@import "@pikonen/second-design-system/tokens/colors.css";
+@import "@pikonen/second-design-system/tokens/spacing.css";
+@import "@pikonen/second-design-system/tokens/radius.css";
+@import "@pikonen/second-design-system/styles.css";
 
-/* pinx-ui ships compiled JS rather than source, so point Tailwind at the built
-   bundle to pick up the class names its components use. */
-@source "../node_modules/pinx-ui/dist";
+/* Exposes those tokens as Tailwind utilities. Generated — see
+   scripts/build-ds-theme.mjs. */
+@import "./ds-theme.css";
+
+/* ── Text styles — STOPGAP, owed to the design system ─────────────────────
+   The package's typography.css gives font families, weights and the quote
+   style, but none of the Figma text styles the frames use. Until it ships
+   them they live here, one utility per Figma style, named exactly as in
+   Figma so they can move upstream unchanged: text-h1, text-lead, text-p …
+   Values are the Figma styles verbatim. Tailwind's own size scale (text-sm,
+   text-xs …) is cleared so these are the only sizes there are. Figma's
+   letter spacing is a percentage, so -1.2% is -0.012em.
+   The pull quote is not here: the package's own `.quote` class covers it. */
+@theme {
+  --text-*: initial;
+
+  --text-h1: 48px;               /* Inter SemiBold 48 / 48 / -1.2% */
+  --text-h1--line-height: 48px;
+  --text-h1--letter-spacing: -0.012em;
+  --text-h1--font-weight: 600;
+
+  --text-large: 18px;            /* Inter SemiBold 18 / 28 */
+  --text-large--line-height: 28px;
+  --text-large--font-weight: 600;
+
+  --text-lead: 20px;             /* Inter Regular 20 / 28 */
+  --text-lead--line-height: 28px;
+
+  --text-p: 16px;                /* Inter Regular 16 / 28 */
+  --text-p--line-height: 28px;
+
+  --text-p-ui: 16px;             /* Inter Regular 16 / 24 */
+  --text-p-ui--line-height: 24px;
+
+  --text-body: 14px;             /* Inter Regular 14 / 24 */
+  --text-body--line-height: 24px;
+
+  --text-body-medium: 14px;      /* Inter Medium 14 / 24 */
+  --text-body-medium--line-height: 24px;
+  --text-body-medium--font-weight: 500;
+
+  --text-subtle: 14px;           /* Inter Regular 14 / 20 */
+  --text-subtle--line-height: 20px;
+
+  --text-small: 14px;            /* Inter Medium 14 / 14 */
+  --text-small--line-height: 14px;
+  --text-small--font-weight: 500;
+}
+
+/* ── Field error state — STOPGAP, owed to the design system ──────────────
+   Input and Textarea have no error state; pages put the message in
+   helperText, mark the field aria-invalid, and add this class to recolour the
+   helper. It reaches into the components' own class names, so it breaks if
+   they are renamed — an `error` prop upstream should replace it. Unlayered and
+   two classes deep, so it outranks the package's one-class rule. */
+.field-error .ds-input__helper,
+.field-error .ds-textarea__helper {
+  color: var(--color-red-600);
+}
