@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Button, Footer, Input, Label, Nav } from "pinx-ui";
+import { Button, Footer, Input, Navigation, Textarea } from "@pikonen/second-design-system";
 import { MENU, useContent } from "./content";
 
 // Figma: my-website › Contact — Desktop (node 114:692) and Contact — Mobile
@@ -7,39 +7,22 @@ import { MENU, useContent } from "./content";
 // below md the contact details stack above the form, at md and up they sit
 // side by side in two equal columns — the same frame as the About page.
 //
-// As on AboutPage, the frames' Inter / slate styling is mapped onto the nearest
-// pinx-ui tokens rather than copied:
+// Colours and spacing are the package's tokens and type is the Figma text
+// styles, all at the frame's own values. One exception: the detail label sits
+// 2px above its value in Figma, and the spacing scale has no 2px step, so it
+// rounds up to 4.
 //
-//   design                         token
-//   h1 Inter SemiBold 48           display-l (Roboto Serif Bold 60)
-//   intro, details Inter 14        body-s
-//   slate/500 secondary text       text-body (body-disabled would fail 4.5:1)
-//   slate/400 icon ring            border-border-dark
-//   fields, Send message           pinx-ui Input and Button
-//
-// Spacing snaps to the scale, ties rounding up:
-//
-//   design    token   px    used for
-//   2         4xs      2    detail label to value (exact)
-//   8         2xs      8    title to intro (exact)
-//   12        xs      12    "Follow me" to icons, icon gap (exact)
-//   16        s       16    gutters, mobile top padding
-//   20        m       24    gap between the two details
-//   24        m       24    form field gap, desktop top padding (exact)
-//   32        l       32    mobile contact-info gap (exact)
-//   40        xl      48    desktop contact-info gap, mobile section gaps
-//   48        xl      48    desktop gap above the footer (exact)
-//   64        2xl     64    desktop column gap (exact)
-//
-// What pinx-ui does not have, and how it is covered here:
-// - No Textarea. The message field is a native <textarea> with Input's own
-//   border, radius, inset and type classes so it reads as the same control.
-//   Its label is pinx-ui's Label at body-s; Input's built-in label is
-//   14px Medium, so the Message label is one weight lighter than the two above.
-// - No social/icon-button component, and no LinkedIn / Instagram / WhatsApp
-//   icons. The ringed links are built here around the frame's own SVGs.
-// - Button's only fills are primary/secondary; the frame's dark slate button
-//   is left to the design system, as on AboutPage.
+// Where the design system falls short, and how it is covered here:
+// - No error state on Input or Textarea. Errors go in helperText, which the
+//   component already links to the field with aria-describedby, and the field
+//   is marked aria-invalid. The helper text is slate in the package, so the
+//   `field-error` class (styles.css) recolours it — by reaching into the
+//   component's own class names, which is fragile and is what an `error` prop
+//   upstream should replace.
+// - Button renders a <button> only, with no way to render a link. The social
+//   links are anchors carrying Button's own icon-circle classes, so they look
+//   and behave exactly like the component; Button just cannot be one. That
+//   circle is 40px, against the frame's 44px — the component wins.
 // - There is no backend for the form, so "sending" validates and then shows a
 //   confirmation. Nothing leaves the browser.
 
@@ -72,15 +55,8 @@ export function ContactPage() {
 
   if (!content) return null;
 
-  // Button renders a <button> with no type, so inside a form it is the submit
-  // button: Enter in a field clicks it, its onClick sends, and the submit event
-  // that follows is stopped here. As on LoginPage, this must do nothing else
-  // or the send would run twice.
-  function swallowSubmit(event: FormEvent) {
+  function send(event: FormEvent) {
     event.preventDefault();
-  }
-
-  function send() {
     const next: FormErrors = {};
     if (!name.trim()) next.name = content!["error.Contact_Name"];
     if (!EMAIL_PATTERN.test(email.trim())) next.email = content!["error.Contact_Email"];
@@ -101,8 +77,8 @@ export function ContactPage() {
   const address = content["label.Contact_Email"];
 
   return (
-    <div className="min-h-screen bg-white font-body text-body">
-      <Nav
+    <div className="flex min-h-screen flex-col bg-white font-sans">
+      <Navigation
         siteName={content["label.SiteName"]}
         links={MENU.map((item) => ({
           label: content[item.key],
@@ -111,28 +87,26 @@ export function ContactPage() {
         }))}
       />
 
-      <div className="mx-auto flex max-w-5xl flex-col gap-xl px-s pt-s md:pt-m">
-        <main className="flex flex-col gap-xl md:flex-row md:items-start md:gap-2xl">
-          <div className="flex flex-col gap-l md:flex-1 md:gap-xl">
-            <header className="flex flex-col gap-2xs">
-              <h1 className="font-display text-display-l text-body">
-                {content["label.Contact_Title"]}
-              </h1>
-              <p className="text-body-s text-body">{content["label.Contact_Intro"]}</p>
+      <div className="mx-auto flex w-full max-w-[960px] flex-1 flex-col">
+        <main className="flex flex-1 flex-col gap-40 px-16 pt-16 pb-40 md:flex-row md:items-start md:gap-64 md:pt-24 md:pb-48">
+          <div className="flex flex-col gap-32 md:flex-1 md:gap-40">
+            <header className="flex flex-col gap-8">
+              <h1 className="text-h1 text-slate-900">{content["label.Contact_Title"]}</h1>
+              <p className="text-body text-slate-500">{content["label.Contact_Intro"]}</p>
             </header>
 
-            <dl className="flex flex-col gap-m text-body-s text-body">
-              <div className="flex flex-col gap-4xs">
-                <dt>{content["label.Contact_PhoneLabel"]}</dt>
-                <dd>
+            <dl className="flex flex-col gap-20 text-body">
+              <div className="flex flex-col gap-4">
+                <dt className="text-slate-500">{content["label.Contact_PhoneLabel"]}</dt>
+                <dd className="text-slate-900">
                   <a href={`tel:${phone.replace(/\s/g, "")}`} className="hover:underline">
                     {phone}
                   </a>
                 </dd>
               </div>
-              <div className="flex flex-col gap-4xs">
-                <dt>{content["label.Contact_EmailLabel"]}</dt>
-                <dd>
+              <div className="flex flex-col gap-4">
+                <dt className="text-slate-500">{content["label.Contact_EmailLabel"]}</dt>
+                <dd className="text-slate-900">
                   <a href={`mailto:${address}`} className="hover:underline">
                     {address}
                   </a>
@@ -140,15 +114,15 @@ export function ContactPage() {
               </div>
             </dl>
 
-            <div className="flex flex-col gap-xs">
-              <p className="text-body-s text-body">{content["label.Contact_Follow"]}</p>
-              <ul className="flex items-center gap-xs">
+            <div className="flex flex-col gap-12">
+              <p className="text-body text-slate-500">{content["label.Contact_Follow"]}</p>
+              <ul className="flex items-center gap-12">
                 {SOCIAL.map((network) => (
                   <li key={network.name}>
                     <a
                       href={network.href}
                       aria-label={network.name}
-                      className="flex size-11 items-center justify-center rounded-full border border-border-dark transition-colors hover:bg-primary-100 focus-visible:outline-2 focus-visible:outline-primary-700"
+                      className="ds-button ds-button--default ds-button--icon-circle"
                     >
                       <img src={network.icon} alt="" width={24} height={24} />
                     </a>
@@ -160,63 +134,56 @@ export function ContactPage() {
 
           <div className="flex flex-col md:flex-1">
             {sent ? (
-              <div className="flex flex-col gap-s" role="status">
-                <h2 className="font-display text-display-s text-body">
-                  {content["label.Contact_SentTitle"]}
-                </h2>
-                <p className="text-body-md text-body">{content["label.Contact_SentBody"]}</p>
-                <div className="w-fit">
-                  <Button
-                    label={content["label.Contact_SendAnother"]}
-                    variant="secondary"
-                    onClick={reset}
-                  />
-                </div>
+              <div className="flex flex-col gap-16" role="status">
+                <h2 className="text-large text-slate-900">{content["label.Contact_SentTitle"]}</h2>
+                <p className="text-p text-slate-800">{content["label.Contact_SentBody"]}</p>
+                <Button variant="outline" className="w-fit" onClick={reset}>
+                  {content["label.Contact_SendAnother"]}
+                </Button>
               </div>
             ) : (
-              <form className="flex flex-col gap-m" onSubmit={swallowSubmit} noValidate>
+              <form className="flex flex-col gap-24" onSubmit={send} noValidate>
                 <Input
                   label={content["label.Contact_NameField"]}
                   value={name}
-                  onChange={setName}
+                  onChange={(event) => setName(event.target.value)}
                   placeholder={content["label.Contact_NamePlaceholder"]}
-                  error={errors.name}
+                  autoComplete="name"
+                  helperText={errors.name}
+                  aria-invalid={errors.name ? true : undefined}
+                  className={errors.name ? "field-error" : undefined}
                 />
                 <Input
+                  type="email"
                   label={content["label.Contact_EmailField"]}
                   value={email}
-                  onChange={setEmail}
+                  onChange={(event) => setEmail(event.target.value)}
                   placeholder={content["label.Contact_EmailPlaceholder"]}
-                  error={errors.email}
+                  autoComplete="email"
+                  helperText={errors.email}
+                  aria-invalid={errors.email ? true : undefined}
+                  className={errors.email ? "field-error" : undefined}
                 />
-                {/* Nesting the textarea in a <label> is what ties Label's
-                    text to it — Label renders a plain span. */}
-                <label className="flex flex-col gap-2xs text-body-s">
-                  <Label label={content["label.Contact_MessageField"]} />
-                  <textarea
-                    value={message}
-                    onChange={(event) => setMessage(event.target.value)}
-                    placeholder={content["label.Contact_MessagePlaceholder"]}
-                    aria-invalid={errors.message ? true : undefined}
-                    className={`h-20 w-full resize-y rounded-sm border bg-white p-xs font-body text-body-md text-body placeholder:text-body focus:border-2 focus:outline-none ${
-                      errors.message ? "border-error focus:border-error" : "border-body focus:border-primary"
-                    }`}
-                  />
-                  {errors.message && (
-                    <span className="font-body text-xs text-error">{errors.message}</span>
-                  )}
-                </label>
-                {/* Full width on mobile (the flex column stretches it),
-                    intrinsic width on desktop. */}
-                <div className="flex flex-col md:w-fit">
-                  <Button label={content["label.Contact_Send"]} onClick={send} />
-                </div>
+                <Textarea
+                  label={content["label.Contact_MessageField"]}
+                  value={message}
+                  onChange={(event) => setMessage(event.target.value)}
+                  placeholder={content["label.Contact_MessagePlaceholder"]}
+                  helperText={errors.message}
+                  aria-invalid={errors.message ? true : undefined}
+                  className={errors.message ? "field-error" : undefined}
+                />
+                {/* Full width on mobile, intrinsic width on desktop, as in the
+                    frames. */}
+                <Button type="submit" className="w-full md:w-fit">
+                  {content["label.Contact_Send"]}
+                </Button>
               </form>
             )}
           </div>
         </main>
 
-        <Footer copyright="copyright 2026" tagline="UX · UI · Visual design" />
+        <Footer />
       </div>
     </div>
   );
