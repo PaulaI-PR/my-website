@@ -125,12 +125,15 @@ export function useContent(): Content | null {
 
 // Labels come from the content file; hrefs are routing, so they stay in code.
 // Nav wants { label, href }, so the key is resolved to its copy at render time.
-// Work is still the placeholder "#" it has always been; About, Contact and
-// login are the real destinations, and they are what the hash router in
-// index.tsx matches on.
+// Work is still the placeholder "#" it has always been; About and Contact are
+// the real destinations, and they are what the hash router in index.tsx
+// matches on.
+//
+// Log in is deliberately not listed: the page and its #/login route still
+// exist, but the nav hides the link until login is ready to launch. Re-add
+// { key: "label.Navi_Login", href: "#/login" } here to show it again.
 export const MENU: { key: ContentKey; href: string }[] = [
   { key: "label.Navi_1", href: "#" },
   { key: "label.Navi_2", href: "#/about" },
   { key: "label.Navi_3", href: "#/contact" },
-  { key: "label.Navi_Login", href: "#/login" },
 ];
