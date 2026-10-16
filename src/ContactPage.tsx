@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Button, Footer, Input, Navigation, Textarea } from "@pikonen/second-design-system";
 import { MENU, useContent } from "./content";
+import { InstagramIcon, LinkedInIcon, WhatsAppIcon, type SocialIcon } from "./SocialIcons";
 
 // Figma: my-website › Contact — Desktop (node 114:692) and Contact — Mobile
 // (114:768). Same page at two widths, so one component with md: as the seam:
@@ -28,10 +29,10 @@ import { MENU, useContent } from "./content";
 
 // Placeholder hrefs: the design names the three networks but not the profiles.
 // Swap in the real URLs.
-const SOCIAL = [
-  { name: "LinkedIn", icon: "/assets/icons/linkedin.svg", href: "#" },
-  { name: "Instagram", icon: "/assets/icons/instagram.svg", href: "#" },
-  { name: "WhatsApp", icon: "/assets/icons/whatsapp.svg", href: "#" },
+const SOCIAL: { name: string; Icon: SocialIcon; href: string }[] = [
+  { name: "LinkedIn", Icon: LinkedInIcon, href: "#" },
+  { name: "Instagram", Icon: InstagramIcon, href: "#" },
+  { name: "WhatsApp", Icon: WhatsAppIcon, href: "#" },
 ];
 
 // Same loose check as LoginPage: the client can only confirm the value looks
@@ -124,7 +125,7 @@ export function ContactPage() {
                       aria-label={network.name}
                       className="ds-button ds-button--default ds-button--icon-circle"
                     >
-                      <img src={network.icon} alt="" width={24} height={24} />
+                      <network.Icon />
                     </a>
                   </li>
                 ))}
