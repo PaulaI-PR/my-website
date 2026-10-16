@@ -13,6 +13,19 @@
    scripts/build-ds-theme.mjs. */
 @import "./ds-theme.css";
 
+/* The navigation component owns its internal row, so the app constrains that
+   row to the same responsive 960px content column used by the page frames. */
+.ds-nav {
+  display: flex;
+  justify-content: center;
+}
+
+.ds-nav__wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 960px;
+}
+
 /* ── Text styles — STOPGAP, owed to the design system ─────────────────────
    The package's typography.css gives font families, weights and the quote
    style, but none of the Figma text styles the frames use. Until it ships
