@@ -192,7 +192,7 @@ export function LoginPage() {
                 code?" before each option. RadioButton carries its own <label>,
                 so each option needs no wrapper. */}
             <fieldset className="flex flex-col gap-12">
-              <legend className="mb-12 text-small leading-[20px] text-slate-900">
+              <legend className="mb-12 text-subtle font-medium text-slate-900">
                 {content["label.Login_ChannelLegend"]}
               </legend>
               <RadioButton
