@@ -1,5 +1,6 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { AboutPage } from "./AboutPage";
 import { LandingPage } from "./LandingPage";
 import { LoginPage } from "./LoginPage";
 import "./styles.css";
@@ -14,6 +15,7 @@ import "./styles.css";
 // pages, or ever wants real URLs, this is the seam to replace with a router.
 
 const LOGIN_ROUTE = "#/login";
+const ABOUT_ROUTE = "#/about";
 
 function useHashRoute(): string {
   // Read straight from location on first render so a deep link lands on the
@@ -38,9 +40,11 @@ function useHashRoute(): string {
 
 function App() {
   const hash = useHashRoute();
-  // Anything that is not the login route is the landing page, including the
-  // bare "#" the placeholder nav links set.
-  return hash === LOGIN_ROUTE ? <LoginPage /> : <LandingPage />;
+  // Anything that is not a known route is the landing page,
+  // including the bare "#" the placeholder nav links set.
+  if (hash === LOGIN_ROUTE) return <LoginPage />;
+  if (hash === ABOUT_ROUTE) return <AboutPage />;
+  return <LandingPage />;
 }
 
 createRoot(document.getElementById("root")!).render(
