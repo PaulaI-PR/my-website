@@ -42,7 +42,9 @@ export function AboutPage() {
           />
 
           <div className="flex flex-col gap-32 md:flex-1">
-            <h1 className="text-h1 text-slate-900">{content["label.About_Title"]}</h1>
+            <h1 className="font-about-heading text-h1 text-slate-900">
+              {content["label.About_Title"]}
+            </h1>
             <blockquote className="quote text-slate-900">{content["label.About_Quote"]}</blockquote>
             <p className="text-lead text-slate-500">{content["label.About_Lead"]}</p>
             <div className="flex flex-col gap-16 text-p text-slate-800">
