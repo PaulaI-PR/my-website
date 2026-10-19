@@ -35,13 +35,11 @@ export function AboutPage() {
           the footer spans the screen, as the mobile frame draws it. */}
       <div className="mx-auto flex w-full max-w-[960px] flex-1 flex-col">
         <main className="flex flex-1 flex-col gap-40 px-16 pt-16 pb-40 md:flex-row md:items-start md:gap-64 md:pt-24 md:pb-48">
-          {/* Stands in for the portrait until there is a photo; swap for an
-              <img> at the same 4:5 ratio. */}
-          <div className="flex aspect-[4/5] w-full items-center justify-center rounded-md bg-slate-200 md:flex-1">
-            <p className="text-subtle text-slate-500">
-              {content["label.About_PortraitPlaceholder"]}
-            </p>
-          </div>
+          <div
+            aria-label="Grey cat resting on a bed"
+            className="aspect-[4/5] w-full rounded-md bg-slate-200 bg-[url('/assets/about-portrait.jpg')] bg-cover bg-center md:flex-1"
+            role="img"
+          />
 
           <div className="flex flex-col gap-32 md:flex-1">
             <h1 className="text-h1 text-slate-900">{content["label.About_Title"]}</h1>
