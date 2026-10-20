@@ -5,7 +5,7 @@
     "label.Navi_3": "Contact",
     "label.Navi_Login": "Log in",
 
-    "label.About_Title": "About me",
+    "label.About_Title": "About",
     "label.About_Quote": "“Good design is quiet. It clears the way so people can get on with what matters.”",
     "label.About_Lead": "I'm a UX and visual designer who turns complex products into clear, human experiences, from the first sketch to the final detail.",
     "label.About_Body_1": "I work with start-ups and product teams to shape ideas into interfaces people enjoy using. My process starts with listening: research, testing and plenty of questions before any pixels move.",
@@ -13,7 +13,7 @@
     "label.About_PortraitPlaceholder": "Portrait photo (black & white)",
     "label.About_DownloadCv": "Download CV",
 
-    "label.Contact_Title": "Contact",
+    "label.Contact_Title": "Contact me",
     "label.Contact_Intro": "Have a project in mind or just want to say hi? Send a message and I'll get back to you soon.",
     "label.Contact_PhoneLabel": "Telephone",
     "label.Contact_Phone": "+358 40 123 4567",

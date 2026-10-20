@@ -13,6 +13,13 @@
    scripts/build-ds-theme.mjs. */
 @import "./ds-theme.css";
 
+@font-face {
+  font-family: "Inter:Semi Bold";
+  src: url("https://static.figma.com/font/Inter_1") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+}
+
 /* The navigation component owns its internal row, so the app constrains that
    row to the same responsive 960px content column used by the page frames. */
 .ds-nav {
@@ -24,6 +31,10 @@
   box-sizing: border-box;
   width: 100%;
   max-width: 960px;
+}
+
+.font-about-heading {
+  font-family: "Inter:Semi Bold";
 }
 
 /* ── Text styles — STOPGAP, owed to the design system ─────────────────────
