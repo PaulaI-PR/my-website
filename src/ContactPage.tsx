@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from "react";
-import { Button, Footer, Input, Navigation, Textarea } from "@pikonen/second-design-system";
-import { MENU, useContent } from "./content";
+import { Button, Footer, Input, Textarea } from "@pikonen/second-design-system";
+import { useContent } from "./content";
 import { InstagramIcon, LinkedInIcon, WhatsAppIcon, type SocialIcon } from "./SocialIcons";
+import { SiteHeader } from "./SiteHeader";
 
 // Figma: my-website › Contact — Desktop (node 114:692) and Contact — Mobile
 // (114:768). Same page at two widths, so one component with md: as the seam:
@@ -79,14 +80,7 @@ export function ContactPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-white font-sans">
-      <Navigation
-        siteName={content["label.SiteName"]}
-        links={MENU.map((item) => ({
-          label: content[item.key],
-          href: item.href,
-          active: item.href === "#/contact",
-        }))}
-      />
+      <SiteHeader content={content} activeHref="#/contact" />
 
       <div className="mx-auto flex w-full max-w-[960px] flex-1 flex-col">
         <main className="flex flex-1 flex-col gap-40 px-16 pt-16 pb-40 md:flex-row md:items-start md:gap-64 md:pt-24 md:pb-48">

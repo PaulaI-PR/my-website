@@ -81,7 +81,30 @@ export type ContentKey =
   | "error.Login_Phone"
   | "error.Login_Code"
   | "error.Login_CodeWrong"
-  | "error.Login_SendFailed";
+  | "error.Login_SendFailed"
+  // Search: the modal opened from the header, and the results and case pages it
+  // leads to. Results_Summary carries {count} and {query}; the query placeholder
+  // is filled at render time.
+  | "label.Search_Open"
+  | "label.Search_Title"
+  | "label.Search_Close"
+  | "label.Search_Field"
+  | "label.Search_Placeholder"
+  | "label.Search_Submit"
+  | "error.Search_Empty"
+  | "label.Results_Title"
+  | "label.Results_Prompt"
+  | "label.Results_Summary"
+  | "label.Results_SummarySingle"
+  | "label.Results_Empty"
+  | "label.Results_ViewCase"
+  | "label.Case_Back"
+  | "label.Case_Role"
+  | "label.Case_Year"
+  | "label.Case_Challenge"
+  | "label.Case_Approach"
+  | "label.Case_Outcome"
+  | "label.Case_NotFound";
 
 export type Content = Record<ContentKey, string>;
 

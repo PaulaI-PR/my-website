@@ -1,5 +1,6 @@
-import { Button, Footer, Navigation } from "@pikonen/second-design-system";
-import { MENU, useContent } from "./content";
+import { Button, Footer } from "@pikonen/second-design-system";
+import { useContent } from "./content";
+import { SiteHeader } from "./SiteHeader";
 
 // Figma: my-website › About — Desktop (node 114:1118) and About — Mobile
 // (114:1180). Same page at two widths, so one component with md: as the seam:
@@ -22,14 +23,7 @@ export function AboutPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-white font-sans">
-      <Navigation
-        siteName={content["label.SiteName"]}
-        links={MENU.map((item) => ({
-          label: content[item.key],
-          href: item.href,
-          active: item.href === "#/about",
-        }))}
-      />
+      <SiteHeader content={content} activeHref="#/about" />
 
       {/* The frame's 960px content column. On mobile it is the full width, so
           the footer spans the screen, as the mobile frame draws it. */}
