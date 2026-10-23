@@ -72,6 +72,8 @@ declare module "@pikonen/second-design-system" {
   export interface NavigationProps extends HTMLAttributes<HTMLElement> {
     /** Default "PINX Design". */
     siteName?: ReactNode;
+    /** Rendered as the last item of the link list, e.g. an icon Button. */
+    actions?: ReactNode;
     /** Default "/". */
     siteHref?: string;
     /** Defaults to Work / About / Contact placeholders. */
