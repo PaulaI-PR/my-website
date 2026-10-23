@@ -89,16 +89,20 @@ export const CASES: DesignCase[] = [
  * Case-insensitive match on title, summary, tags and year. An empty or
  * whitespace-only query matches nothing, so the results page can show its
  * prompt instead of listing every case.
+ *
+ * Mockup behaviour: when nothing matches, every case is returned, so a search
+ * always has results to show. Remove the fallback once real search exists.
  */
 export function searchCases(query: string): DesignCase[] {
   const needle = query.trim().toLowerCase();
   if (!needle) return [];
-  return CASES.filter((item) => {
+  const matches = CASES.filter((item) => {
     const haystack = [item.title, item.summary, item.year.toString(), ...item.tags]
       .join(" ")
       .toLowerCase();
     return haystack.includes(needle);
   });
+  return matches.length > 0 ? matches : CASES;
 }
 
 export function findCase(id: string): DesignCase | undefined {
