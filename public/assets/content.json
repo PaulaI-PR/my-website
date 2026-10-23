@@ -75,7 +75,6 @@
     "label.Results_Prompt": "Enter a search term to find projects and pages.",
     "label.Results_Summary": "{count} results for “{query}”",
     "label.Results_SummarySingle": "1 result for “{query}”",
-    "label.Results_Empty": "No results for “{query}”. Try a different term.",
     "label.Results_ViewCase": "View case study",
 
     "label.Case_Back": "Back to search",

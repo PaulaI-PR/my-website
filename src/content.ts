@@ -96,7 +96,6 @@ export type ContentKey =
   | "label.Results_Prompt"
   | "label.Results_Summary"
   | "label.Results_SummarySingle"
-  | "label.Results_Empty"
   | "label.Results_ViewCase"
   | "label.Case_Back"
   | "label.Case_Role"

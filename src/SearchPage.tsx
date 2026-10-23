@@ -40,7 +40,7 @@ export function SearchPage({ query }: SearchPageProps) {
         <main className="flex flex-1 flex-col gap-32 px-16 pt-16 pb-40 md:pt-24 md:pb-48">
           <header className="flex flex-col gap-8">
             <h1 className="text-h1 text-slate-900">{content["label.Results_Title"]}</h1>
-            {results.length > 0 && (
+            {term && (
               <p className="text-lead text-slate-500" role="status">
                 {summary}
               </p>
@@ -48,12 +48,6 @@ export function SearchPage({ query }: SearchPageProps) {
           </header>
 
           {!term && <p className="text-p text-slate-800">{content["label.Results_Prompt"]}</p>}
-
-          {term && results.length === 0 && (
-            <p className="text-p text-slate-800" role="status">
-              {content["label.Results_Empty"].replace("{query}", term)}
-            </p>
-          )}
 
           {results.length > 0 && (
             <ul className="flex flex-col gap-32">
