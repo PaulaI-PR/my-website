@@ -1,9 +1,11 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { AboutPage } from "./AboutPage";
+import { CasePage } from "./CasePage";
 import { ContactPage } from "./ContactPage";
 import { LandingPage } from "./LandingPage";
 import { LoginPage } from "./LoginPage";
+import { SearchPage } from "./SearchPage";
 import "./styles.css";
 
 // The site is two pages now, so it needs some way to pick between them. This is
@@ -14,10 +16,16 @@ import "./styles.css";
 // The cost is what a hash route always costs — the path is #/login rather than
 // /login, and it is invisible to crawlers. If the site grows past a handful of
 // pages, or ever wants real URLs, this is the seam to replace with a router.
+//
+// Search adds a query string to the hash (#/search?q=term), so the route is
+// split into path and query before matching. The case pages are one route with
+// an id after the prefix (#/case/<id>).
 
 const LOGIN_ROUTE = "#/login";
 const ABOUT_ROUTE = "#/about";
 const CONTACT_ROUTE = "#/contact";
+const SEARCH_ROUTE = "#/search";
+const CASE_ROUTE_PREFIX = "#/case/";
 
 function useHashRoute(): string {
   // Read straight from location on first render so a deep link lands on the
@@ -42,11 +50,19 @@ function useHashRoute(): string {
 
 function App() {
   const hash = useHashRoute();
+  const queryAt = hash.indexOf("?");
+  const path = queryAt === -1 ? hash : hash.slice(0, queryAt);
+  const params = new URLSearchParams(queryAt === -1 ? "" : hash.slice(queryAt + 1));
+
   // Anything that is not a known route is the landing page,
   // including the bare "#" the placeholder nav links set.
-  if (hash === LOGIN_ROUTE) return <LoginPage />;
-  if (hash === ABOUT_ROUTE) return <AboutPage />;
-  if (hash === CONTACT_ROUTE) return <ContactPage />;
+  if (path === LOGIN_ROUTE) return <LoginPage />;
+  if (path === ABOUT_ROUTE) return <AboutPage />;
+  if (path === CONTACT_ROUTE) return <ContactPage />;
+  if (path === SEARCH_ROUTE) return <SearchPage query={params.get("q") ?? ""} />;
+  if (path.startsWith(CASE_ROUTE_PREFIX)) {
+    return <CasePage id={path.slice(CASE_ROUTE_PREFIX.length)} />;
+  }
   return <LandingPage />;
 }
 

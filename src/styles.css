@@ -33,6 +33,14 @@
   max-width: 960px;
 }
 
+/* STOPGAP, owed to the design system: Navigation has no slot for an action, so
+   the search icon sits over the header (see SiteHeader.tsx). This keeps the
+   links clear of it: the icon's 32px at its 16–20px inset, plus a gap of 8–12px.
+   Two classes deep so it outranks the package's own padding rule. */
+.ds-nav--searchable .ds-nav__wrapper {
+  padding-right: 60px;
+}
+
 .font-about-heading {
   font-family: "Inter:Semi Bold";
 }

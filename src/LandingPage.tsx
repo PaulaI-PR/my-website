@@ -1,5 +1,6 @@
-import { Footer, ImageCard, Navigation } from "@pikonen/second-design-system";
-import { MENU, useContent } from "./content";
+import { Footer, ImageCard } from "@pikonen/second-design-system";
+import { useContent } from "./content";
+import { SiteHeader } from "./SiteHeader";
 
 // Figma: my-website › Landing page (node 13:21) and mobile-landing-page (22:136).
 // The two frames are the same page at two widths, so this is one component with
@@ -58,10 +59,7 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white font-sans">
-      <Navigation
-        siteName={content["label.SiteName"]}
-        links={MENU.map((item) => ({ label: content[item.key], href: item.href }))}
-      />
+      <SiteHeader content={content} />
 
       <div className="mx-auto flex max-w-5xl flex-col gap-32 px-32 py-48 md:gap-8 md:px-48 md:py-32">
         {/* Mobile: one full-width tile per row, each at the 540/418 ratio the
