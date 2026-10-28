@@ -83,5 +83,10 @@
     "label.Case_Challenge": "Challenge",
     "label.Case_Approach": "Approach",
     "label.Case_Outcome": "Outcome",
-    "label.Case_NotFound": "This case study could not be found."
+    "label.Case_NotFound": "This case study could not be found.",
+
+    "label.Preview_Title": "Search preview",
+    "label.Preview_Intro": "The search as it runs on the site, at desktop and mobile widths. Select the search icon in either frame to open the search dialog.",
+    "label.Preview_Desktop": "Desktop",
+    "label.Preview_Mobile": "Mobile"
 }
