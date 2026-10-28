@@ -6,6 +6,7 @@ import { ContactPage } from "./ContactPage";
 import { LandingPage } from "./LandingPage";
 import { LoginPage } from "./LoginPage";
 import { SearchPage } from "./SearchPage";
+import { SearchPreviewPage } from "./SearchPreviewPage";
 import "./styles.css";
 
 // The site is two pages now, so it needs some way to pick between them. This is
@@ -25,6 +26,7 @@ const LOGIN_ROUTE = "#/login";
 const ABOUT_ROUTE = "#/about";
 const CONTACT_ROUTE = "#/contact";
 const SEARCH_ROUTE = "#/search";
+const SEARCH_PREVIEW_ROUTE = "#/search-preview";
 const CASE_ROUTE_PREFIX = "#/case/";
 
 function useHashRoute(): string {
@@ -60,6 +62,7 @@ function App() {
   if (path === ABOUT_ROUTE) return <AboutPage />;
   if (path === CONTACT_ROUTE) return <ContactPage />;
   if (path === SEARCH_ROUTE) return <SearchPage query={params.get("q") ?? ""} />;
+  if (path === SEARCH_PREVIEW_ROUTE) return <SearchPreviewPage />;
   if (path.startsWith(CASE_ROUTE_PREFIX)) {
     return <CasePage id={path.slice(CASE_ROUTE_PREFIX.length)} />;
   }

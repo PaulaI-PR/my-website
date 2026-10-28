@@ -103,7 +103,12 @@ export type ContentKey =
   | "label.Case_Challenge"
   | "label.Case_Approach"
   | "label.Case_Outcome"
-  | "label.Case_NotFound";
+  | "label.Case_NotFound"
+  // Search preview: a page of the live search at desktop and mobile widths.
+  | "label.Preview_Title"
+  | "label.Preview_Intro"
+  | "label.Preview_Desktop"
+  | "label.Preview_Mobile";
 
 export type Content = Record<ContentKey, string>;
 
