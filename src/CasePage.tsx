@@ -38,14 +38,9 @@ export function CasePage({ id }: CasePageProps) {
           {item && (
             <>
               <header className="flex flex-col gap-16">
-                <div className="flex flex-wrap gap-8">
-                  {item.tags.map((tag) => (
-                    <Tag key={tag}>{tag}</Tag>
-                  ))}
-                </div>
                 <h1 className="text-h1 text-slate-900">{item.title}</h1>
                 <p className="text-lead text-slate-500">{item.summary}</p>
-                <dl className="flex flex-wrap gap-x-32 gap-y-16 text-body">
+                <dl className="flex flex-wrap items-center gap-x-32 gap-y-16 text-body">
                   <div className="flex flex-col gap-4">
                     <dt className="text-slate-500">{content["label.Case_Role"]}</dt>
                     <dd className="text-slate-900">{item.role}</dd>
@@ -53,6 +48,11 @@ export function CasePage({ id }: CasePageProps) {
                   <div className="flex flex-col gap-4">
                     <dt className="text-slate-500">{content["label.Case_Year"]}</dt>
                     <dd className="text-slate-900">{item.year}</dd>
+                  </div>
+                  <div className="flex flex-1 flex-wrap justify-end gap-8">
+                    {item.tags.map((tag) => (
+                      <Tag key={tag}>{tag}</Tag>
+                    ))}
                   </div>
                 </dl>
               </header>
