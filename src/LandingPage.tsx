@@ -1,4 +1,5 @@
 import { Footer, ImageCard } from "@pikonen/second-design-system";
+import { CASES, CASE_IMAGE, CASE_IMAGE_ALT } from "./cases";
 import { useContent } from "./content";
 import { SiteHeader } from "./SiteHeader";
 
@@ -41,14 +42,6 @@ const TILES = [
   { node: "19:170", place: "md:col-start-3 md:row-start-4" },
 ];
 
-// Placeholder content: every Image Card instance in the design carries the
-// component's default photo, so all ten tiles are the same image and share one
-// alt string. Swap in a per-tile src/alt — and title/description, which surface
-// the card's hover caption and until then show the component's own "Image
-// Title" defaults — once there is real work to show.
-const TILE_IMAGE = "/assets/portfolio-tile.jpg";
-const TILE_ALT = "A lioness resting on open gravel";
-
 export function LandingPage() {
   const content = useContent();
 
@@ -68,19 +61,24 @@ export function LandingPage() {
             columns, so the rows need a definite height to divide; the grid takes
             the design grid's own proportion (1100 × 856) and min-h-0 stops it
             growing to content instead (it is a flex item, so its min-height
-            would otherwise be auto). */}
+            would otherwise be auto). Every tile links into a case study page.
+        */}
         <main className="flex flex-col gap-16 md:grid md:aspect-[1100/856] md:min-h-0 md:grid-cols-4 md:grid-rows-4">
-          {TILES.map((tile) => (
-            // ImageCard takes className, so the grid placement goes straight on
-            // it. On desktop size-full makes both axes definite, which
-            // overrides the mobile ratio so the card fills a cell of any shape.
-            <ImageCard
-              key={tile.node}
-              src={TILE_IMAGE}
-              alt={TILE_ALT}
-              className={`aspect-[540/418] md:aspect-auto md:size-full ${tile.place}`}
-            />
-          ))}
+          {TILES.map((tile, index) => {
+            const item = CASES[index % CASES.length];
+
+            return (
+              <a key={tile.node} href={`#/case/${item.id}`} aria-label={item.title} className="block">
+                <ImageCard
+                  src={CASE_IMAGE}
+                  alt={CASE_IMAGE_ALT}
+                  title={item.title}
+                  description={item.tags.join(" · ")}
+                  className={`aspect-[540/418] md:aspect-auto md:size-full ${tile.place}`}
+                />
+              </a>
+            );
+          })}
         </main>
 
         {/* This tagline is longer than the Footer's default, and Footer is one
