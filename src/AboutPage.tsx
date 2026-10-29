@@ -31,7 +31,7 @@ export function AboutPage() {
         <main className="flex flex-1 flex-col gap-40 px-16 pt-16 pb-40 md:flex-row md:items-start md:gap-64 md:pt-24 md:pb-48">
           <div
             aria-label="Grey cat resting on a bed"
-            className="aspect-[4/5] w-full rounded-md bg-slate-200 bg-[url('/assets/about-portrait.jpg')] bg-cover bg-center md:flex-1"
+            className="aspect-[4/5] w-full rounded-md md:aspect-auto md:h-[349px] bg-slate-200 bg-[url('/assets/about-portrait.jpg')] bg-cover bg-center md:flex-1"
             role="img"
           />
 
