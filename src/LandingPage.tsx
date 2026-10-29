@@ -27,19 +27,21 @@ import { SiteHeader } from "./SiteHeader";
 // the page looks rather than repairing it, so it wants its own decision.
 
 // Desktop mosaic placement, in the design's stacking order. Node ids are the
-// Image Card instances in Figma. The placement is md:-only: below md the frame
-// stacks every tile full-width, which is the flex column's default.
+// Image Card instances in Figma; `caseIndex` is the case each tile shows, so a
+// tile keeps its case when the stacking order changes. The placement is md:-only:
+// below md the frame stacks every tile full-width, which is the flex column's
+// default.
 const TILES = [
-  { node: "19:150", place: "md:col-start-1 md:col-span-2 md:row-start-1 md:row-span-2" },
-  { node: "19:56", place: "md:col-start-3 md:row-start-1" },
-  { node: "19:154", place: "md:col-start-4 md:row-start-1 md:row-span-2" },
-  { node: "19:166", place: "md:col-start-3 md:row-start-2" },
-  { node: "19:178", place: "md:col-start-1 md:row-start-3" },
-  { node: "19:162", place: "md:col-start-2 md:col-span-2 md:row-start-3" },
-  { node: "19:158", place: "md:col-start-4 md:row-start-3 md:row-span-2" },
-  { node: "19:174", place: "md:col-start-1 md:row-start-4" },
-  { node: "19:182", place: "md:col-start-2 md:row-start-4" },
-  { node: "19:170", place: "md:col-start-3 md:row-start-4" },
+  { node: "19:150", caseIndex: 0, place: "md:col-start-1 md:row-start-1" },
+  { node: "19:56", caseIndex: 1, place: "md:col-start-2 md:row-start-1" },
+  { node: "19:166", caseIndex: 3, place: "md:col-start-3 md:col-span-2 md:row-start-1" },
+  { node: "19:158", caseIndex: 6, place: "md:col-start-3 md:row-start-2" },
+  { node: "19:174", caseIndex: 7, place: "md:col-start-4 md:row-start-2" },
+  { node: "19:182", caseIndex: 8, place: "md:col-start-1 md:row-start-3" },
+  { node: "19:170", caseIndex: 9, place: "md:col-start-2 md:col-span-2 md:row-start-3" },
+  { node: "19:154", caseIndex: 2, place: "md:col-start-4 md:row-start-3" },
+  { node: "19:178", caseIndex: 4, place: "md:col-start-2 md:col-span-2 md:row-start-4" },
+  { node: "19:162", caseIndex: 5, place: "md:col-start-4 md:row-start-4" },
 ];
 
 export function LandingPage() {
@@ -64,17 +66,17 @@ export function LandingPage() {
             would otherwise be auto). Every tile links into a case study page.
         */}
         <main className="flex flex-col gap-16 md:grid md:aspect-[1100/856] md:min-h-0 md:grid-cols-4 md:grid-rows-4">
-          {TILES.map((tile, index) => {
-            const item = CASES[index % CASES.length];
+          {TILES.map((tile) => {
+            const item = CASES[tile.caseIndex % CASES.length];
 
             return (
-              <a key={tile.node} href={`#/case/${item.id}`} aria-label={item.title} className="block">
+              <a key={tile.node} href={`#/case/${item.id}`} aria-label={item.title} className={`block ${tile.place}`}>
                 <ImageCard
                   src={CASE_IMAGE}
                   alt={CASE_IMAGE_ALT}
                   title={item.title}
                   description={item.tags.join(" · ")}
-                  className={`aspect-[540/418] md:aspect-auto md:size-full ${tile.place}`}
+                  className="aspect-[540/418] md:aspect-auto md:size-full"
                 />
               </a>
             );
