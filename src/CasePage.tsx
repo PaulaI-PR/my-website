@@ -28,7 +28,7 @@ export function CasePage({ id }: CasePageProps) {
       <SiteHeader content={content} activeHref="#" />
 
       <div className="mx-auto flex w-full max-w-[960px] flex-1 flex-col">
-        <main className="flex flex-1 flex-col gap-40 px-16 pt-16 pb-40 md:pt-24 md:pb-48">
+        <main className="flex flex-1 flex-col gap-32 px-16 pt-16 pb-40 md:pt-24 md:pb-48">
           <a href="#/search" className="w-fit text-body-medium text-slate-500 hover:text-slate-900">
             {content["label.Case_Back"]}
           </a>
@@ -64,7 +64,7 @@ export function CasePage({ id }: CasePageProps) {
                 className="aspect-[540/418] w-full md:aspect-[16/9]"
               />
 
-              <div className="flex flex-col gap-32 md:gap-40">
+              <div className="flex flex-col gap-32 md:gap-32">
                 <section className="flex flex-col gap-12">
                   <h2 className="text-large text-slate-900">{content["label.Case_Challenge"]}</h2>
                   <p className="text-p text-slate-800">{item.challenge}</p>
